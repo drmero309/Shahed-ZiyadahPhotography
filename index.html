@@ -52,7 +52,6 @@
       background:var(--black);
       color:var(--text-body);
       overflow-x:hidden;
-      cursor:none;
       -webkit-font-smoothing:antialiased;
     }
 
@@ -60,37 +59,6 @@
       max-width:100%;
       height:auto;
       display:block;
-    }
-
-    /* ══════════════════════════════════════════
-       CUSTOM CURSOR (desktop only)
-    ══════════════════════════════════════════ */
-    #cursor-dot {
-      position:fixed; width:8px; height:8px;
-      background:var(--rose); border-radius:50%;
-      pointer-events:none; z-index:9999;
-      transform:translate(-50%,-50%);
-      transition:transform .1s ease, opacity .3s;
-    }
-    #cursor-ring {
-      position:fixed; width:36px; height:36px;
-      border:1px solid rgba(196,100,122,.4); border-radius:50%;
-      pointer-events:none; z-index:9998;
-      transform:translate(-50%,-50%);
-      transition:transform .18s ease, width .3s, height .3s, border-color .3s, opacity .3s;
-    }
-    body.cursor-hover #cursor-ring { width:54px; height:54px; border-color:var(--rose); }
-    body.cursor-img   #cursor-ring { width:64px; height:64px; border-color:var(--rose); background:rgba(196,100,122,.06); }
-    body.cursor-img   #cursor-dot  { opacity:0; }
-    @media (hover:none),(max-width:768px) {
-      body { cursor:auto; }
-      #cursor-dot, #cursor-ring { display:none; }
-    }
-    a, button, [onclick], .project-card, .gallery-item,
-    .session-card, .filter-btn, .nav-links a, .hamburger { cursor:none; }
-    @media (hover:none),(max-width:768px) {
-      a, button, [onclick], .project-card, .gallery-item,
-      .session-card, .filter-btn, .nav-links a, .hamburger { cursor:auto; }
     }
 
     /* ══════════════════════════════════════════
@@ -127,11 +95,13 @@
       box-shadow:0 2px 32px rgba(0,0,0,.4);
     }
     .nav-logo {
-      font-family:'Cormorant Garamond', serif;
-      font-size:clamp(1.2rem, 3vw, 1.55rem);
-      font-weight:300; color:var(--rose);
-      letter-spacing:4px; text-transform:uppercase;
       text-decoration:none; flex-shrink:0;
+      display:flex; align-items:center;
+    }
+    .nav-logo img {
+      height:clamp(36px, 5vw, 52px);
+      width:auto; display:block;
+      object-fit:contain;
     }
     .nav-links { display:flex; gap:clamp(20px,3vw,40px); list-style:none; }
     .nav-links a {
@@ -391,7 +361,7 @@
     .stat-label { font-size:clamp(.6rem,.7vw,.68rem); letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; margin-top:4px; }
 
     /* ══════════════════════════════════════════
-       PROJECTS
+       PROJECTS — clean organized grid
     ══════════════════════════════════════════ */
     #projects-wrap { background:var(--black); }
     .projects-filter {
@@ -407,75 +377,70 @@
     .filter-btn:hover { border-color:var(--border-hover); color:var(--text-light); }
     .filter-btn.active { border-color:var(--rose); color:var(--rose); background:rgba(196,100,122,.08); }
 
-    /* ── PROJECTS GRID – masonry-feel with CSS grid ── */
+    /* Clean organized 3-column grid (not masonry) */
     .projects-grid {
       display:grid;
-      grid-template-columns:repeat(12,1fr);
-      grid-auto-rows:clamp(40px,5vw,60px);
-      gap:clamp(3px,0.5vw,6px);
+      grid-template-columns:repeat(3, 1fr);
+      gap:clamp(20px,2.5vw,32px);
     }
     .project-card {
-      position:relative; overflow:hidden;
-      background:var(--surface-2); cursor:crosshair;
-      border-radius:2px;
-    }
-    .project-card img {
-      width:100%; height:100%; object-fit:cover; display:block;
-      transition:transform .9s cubic-bezier(.25,.46,.45,.94), filter .4s;
-      filter:brightness(.85) saturate(.9);
-    }
-    .project-card:hover img { transform:scale(1.07); filter:brightness(1) saturate(1.05); }
-    .project-card:nth-child(1) { grid-column:span 7; grid-row:span 6; }
-    .project-card:nth-child(2) { grid-column:span 5; grid-row:span 4; }
-    .project-card:nth-child(3) { grid-column:span 5; grid-row:span 5; }
-    .project-card:nth-child(4) { grid-column:span 4; grid-row:span 5; }
-    .project-card:nth-child(5) { grid-column:span 8; grid-row:span 5; }
-
-    .project-overlay {
-      position:absolute; inset:0;
-      background:linear-gradient(160deg, transparent 35%, rgba(5,2,1,.96) 100%);
-      opacity:0; transition:opacity .4s;
+      position:relative;
+      background:var(--surface-2);
+      border:1px solid var(--border);
+      border-radius:4px;
+      overflow:hidden;
+      transition:border-color .35s, transform .35s, box-shadow .35s;
       display:flex; flex-direction:column;
-      justify-content:flex-end;
-      padding:clamp(16px,2.5vw,28px);
     }
-    .project-card:hover .project-overlay { opacity:1; }
+    .project-card:hover {
+      border-color:var(--border-hover);
+      transform:translateY(-4px);
+      box-shadow:0 16px 40px rgba(0,0,0,.4);
+    }
+    .project-thumb { position:relative; width:100%; aspect-ratio:4/3; overflow:hidden; background:var(--surface-3); }
+    .project-thumb img {
+      width:100%; height:100%; object-fit:cover; display:block;
+      transition:transform .7s cubic-bezier(.25,.46,.45,.94), filter .4s;
+      filter:brightness(.9) saturate(.95);
+    }
+    .project-card:hover .project-thumb img { transform:scale(1.06); filter:brightness(1) saturate(1.05); }
     .proj-tag {
-      display:inline-block; margin-bottom:8px;
-      font-size:.62rem; letter-spacing:3px; text-transform:uppercase;
-      color:var(--rose); border:1px solid rgba(196,100,122,.4);
-      padding:4px 12px; width:fit-content;
-    }
-    .project-overlay h3 {
-      font-family:'Cormorant Garamond', serif;
-      font-size:clamp(1.1rem,2vw,1.6rem);
-      color:var(--pearl); font-weight:300; margin-bottom:4px;
-      transform:translateY(10px); transition:transform .38s;
-    }
-    .project-card:hover .project-overlay h3 { transform:translateY(0); }
-    .project-overlay .proj-meta {
-      font-size:clamp(.65rem,.75vw,.72rem); color:var(--text-muted); letter-spacing:1px; margin-bottom:12px;
-      transform:translateY(10px); transition:transform .38s .05s;
-    }
-    .project-card:hover .proj-meta { transform:translateY(0); }
-    .project-view-btn {
-      display:inline-flex; align-items:center; gap:8px;
-      font-size:.68rem; letter-spacing:3px; text-transform:uppercase;
-      color:var(--rose); border:1px solid rgba(196,100,122,.4);
-      padding:8px 16px; width:fit-content;
-      transform:translateY(10px); opacity:0; transition:all .38s .08s;
-    }
-    .project-card:hover .project-view-btn { transform:translateY(0); opacity:1; }
-    .proj-count {
       position:absolute; top:12px; right:12px;
-      background:rgba(5,2,1,.8); backdrop-filter:blur(6px);
+      font-size:.6rem; letter-spacing:3px; text-transform:uppercase;
+      color:var(--rose); background:rgba(10,5,3,.7); backdrop-filter:blur(6px);
+      border:1px solid rgba(196,100,122,.4);
+      padding:5px 12px;
+    }
+    .proj-count {
+      position:absolute; bottom:12px; left:12px;
+      background:rgba(5,2,1,.75); backdrop-filter:blur(6px);
       border:1px solid var(--border); padding:4px 10px;
       font-size:.62rem; letter-spacing:2px; color:var(--text-light);
       text-transform:uppercase; display:flex; align-items:center; gap:6px;
-      opacity:0; transition:opacity .3s;
     }
-    .project-card:hover .proj-count { opacity:1; }
     .proj-count i { color:var(--rose); font-size:.6rem; }
+    .project-body { padding:clamp(16px,2vw,22px) clamp(18px,2.2vw,24px); flex:1; display:flex; flex-direction:column; gap:8px; }
+    .project-body h3 {
+      font-family:'Cormorant Garamond', serif;
+      font-size:clamp(1.15rem,1.8vw,1.4rem); color:var(--pearl); font-weight:300;
+    }
+    .project-body .proj-meta {
+      font-size:.74rem; color:var(--text-muted); letter-spacing:.5px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .project-body .proj-meta i { color:var(--rose); font-size:.7rem; }
+    .project-view-btn {
+      margin-top:10px;
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      font-size:.68rem; letter-spacing:3px; text-transform:uppercase;
+      color:var(--rose); border:1px solid rgba(196,100,122,.4);
+      padding:10px 16px; transition:all .3s;
+    }
+    .project-card:hover .project-view-btn { background:rgba(196,100,122,.1); border-color:var(--rose); }
+    .projects-empty {
+      grid-column:1/-1; text-align:center; padding:60px 0;
+      color:var(--text-muted); font-size:.9rem; letter-spacing:1px;
+    }
 
     /* ══════════════════════════════════════════
        TESTIMONIALS
@@ -524,18 +489,33 @@
     .testimonial-stars i { color:var(--rose); font-size:.65rem; }
 
     /* ══════════════════════════════════════════
-       SESSIONS
+       SESSIONS / PRICING
     ══════════════════════════════════════════ */
     #sessions-wrap { background:var(--surface); }
+    .sessions-tabs {
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin-bottom:clamp(28px,4vw,44px);
+    }
+    .sess-tab-btn {
+      background:transparent; border:1px solid var(--border);
+      color:var(--text-muted); padding:clamp(10px,1.3vw,12px) clamp(18px,2.4vw,28px);
+      font-family:'Jost', sans-serif; font-size:clamp(.68rem,.78vw,.76rem);
+      letter-spacing:2px; text-transform:uppercase; transition:all .3s;
+      display:flex; align-items:center; gap:10px;
+    }
+    .sess-tab-btn i { color:var(--rose); }
+    .sess-tab-btn:hover { border-color:var(--border-hover); color:var(--text-light); }
+    .sess-tab-btn.active { border-color:var(--rose); color:var(--rose); background:rgba(196,100,122,.1); }
+
     .sessions-grid {
       display:grid;
       grid-template-columns:repeat(3,1fr);
-      gap:clamp(14px,2vw,24px);
+      gap:clamp(14px,2vw,22px);
     }
     .session-card {
       background:rgba(38,24,18,.9);
       border:1px solid var(--border);
-      padding:clamp(28px,4vw,48px) clamp(22px,3vw,36px);
+      padding:clamp(24px,3vw,34px) clamp(20px,2.6vw,28px);
       box-shadow:0 2px 24px rgba(0,0,0,.3);
       position:relative; transition:all .4s; overflow:hidden;
       display:flex; flex-direction:column;
@@ -544,35 +524,36 @@
       content:''; position:absolute; bottom:0; left:0;
       width:0; height:2px; background:var(--rose); transition:width .45s;
     }
-    .session-card::after {
-      content:''; position:absolute; top:0; right:0;
-      width:0; height:2px; background:rgba(196,100,122,.35); transition:width .45s .1s;
-    }
+    .session-card.featured { border-color:rgba(196,100,122,.55); }
     .session-card:hover { border-color:var(--border-hover); transform:translateY(-6px); }
     .session-card:hover::before { width:100%; }
-    .session-card:hover::after  { width:100%; }
-    .session-icon { font-size:clamp(1.4rem,2vw,1.7rem); color:var(--rose); margin-bottom:20px; opacity:.9; }
+    .session-badge {
+      position:absolute; top:14px; left:14px;
+      font-size:.6rem; letter-spacing:2px; text-transform:uppercase;
+      color:#faf8f6; background:var(--rose); padding:4px 10px; border-radius:2px;
+    }
     .session-card h3 {
       font-family:'Cormorant Garamond', serif;
-      font-size:clamp(1.4rem,2.5vw,1.75rem); color:var(--pearl); font-weight:300; margin-bottom:12px;
+      font-size:clamp(1.1rem,1.8vw,1.3rem); color:var(--pearl); font-weight:300; margin-bottom:6px;
     }
-    .session-card p { font-size:clamp(.82rem,.9vw,.9rem); color:var(--text-muted); line-height:1.9; margin-bottom:24px; }
-    .session-features { list-style:none; margin-bottom:28px; flex:1; }
-    .session-features li {
-      font-size:clamp(.75rem,.82vw,.8rem); color:var(--text-body);
-      padding:7px 0; border-bottom:1px solid rgba(196,100,122,.12);
-      display:flex; align-items:center; gap:10px;
-    }
-    .session-features li::before { content:'◆'; color:var(--rose); font-size:.38rem; flex-shrink:0; }
+    .session-card .session-sub { font-size:.72rem; color:var(--text-muted); letter-spacing:1px; margin-bottom:18px; }
     .session-price {
       font-family:'Cormorant Garamond', serif;
-      font-size:clamp(1.2rem,2vw,1.5rem); color:var(--rose); font-weight:300; margin-bottom:20px;
+      font-size:clamp(1.6rem,2.6vw,2rem); color:var(--rose); font-weight:300; margin-bottom:6px;
     }
+    .session-price span { font-size:.7rem; color:var(--text-muted); font-family:'Jost',sans-serif; letter-spacing:1px; }
+    .session-features { list-style:none; margin:14px 0 22px; flex:1; }
+    .session-features li {
+      font-size:clamp(.74rem,.8vw,.78rem); color:var(--text-body);
+      padding:6px 0; border-bottom:1px solid rgba(196,100,122,.12);
+      display:flex; align-items:center; gap:10px;
+    }
+    .session-features li::before { content:'◆'; color:var(--rose); font-size:.36rem; flex-shrink:0; }
     .btn-whatsapp {
       display:inline-flex; align-items:center; gap:10px;
       background:transparent; border:1px solid rgba(196,100,122,.4);
       color:var(--rose); padding:clamp(10px,1.5vw,12px) clamp(16px,2vw,24px);
-      font-size:clamp(.7rem,.8vw,.76rem); letter-spacing:2px; text-transform:uppercase;
+      font-size:clamp(.68rem,.78vw,.74rem); letter-spacing:2px; text-transform:uppercase;
       font-family:'Jost', sans-serif; text-decoration:none;
       transition:all .3s; width:100%; justify-content:center; margin-top:auto;
     }
@@ -657,88 +638,6 @@
     }
     .btn-wa-main i { color:#25D366; }
     .btn-wa-main:hover { color:var(--rose); }
-
-    /* ══════════════════════════════════════════
-       MODAL
-    ══════════════════════════════════════════ */
-    .modal {
-      display:none; position:fixed; inset:0; z-index:2000;
-      background:rgba(10,5,3,.97);
-      align-items:flex-end; justify-content:center; padding:0;
-    }
-    .modal.open { display:flex; }
-    .modal-content {
-      width:100%; max-width:100%; height:92vh;
-      background:var(--deep); border-top:2px solid var(--rose);
-      display:flex; flex-direction:column;
-      animation:sheetUp .42s cubic-bezier(.16,1,.3,1);
-    }
-    @keyframes sheetUp { from { transform:translateY(60px); opacity:0; } to { transform:translateY(0); opacity:1; } }
-    .modal-header {
-      padding:clamp(12px,2vw,20px) clamp(14px,2.5vw,28px);
-      border-bottom:1px solid var(--border);
-      display:flex; justify-content:space-between; align-items:center;
-      flex-shrink:0; gap:16px; background:var(--deep);
-    }
-    .modal-header-left { display:flex; align-items:center; gap:16px; min-width:0; }
-    .modal-cover-thumb {
-      width:clamp(38px,5vw,52px); height:clamp(38px,5vw,52px);
-      object-fit:cover; border:1px solid var(--border); flex-shrink:0;
-    }
-    .modal-title-block { min-width:0; }
-    .modal-header h2 {
-      font-family:'Cormorant Garamond', serif;
-      font-size:clamp(1.1rem,2vw,1.5rem);
-      color:var(--pearl); font-weight:300;
-      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-    }
-    .modal-meta { font-size:.68rem; color:var(--rose); letter-spacing:2px; text-transform:uppercase; margin-top:3px; }
-    .modal-header-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
-    .modal-count-badge { font-size:.68rem; letter-spacing:2px; color:var(--text-muted); border:1px solid var(--border); padding:6px 14px; white-space:nowrap; }
-    .modal-close {
-      background:none; border:1px solid rgba(196,100,122,.3);
-      color:var(--text-muted); width:40px; height:40px; font-size:1rem;
-      display:flex; align-items:center; justify-content:center; transition:all .3s; flex-shrink:0;
-    }
-    .modal-close:hover { border-color:var(--rose); color:var(--rose); }
-    .modal-toolbar {
-      padding:clamp(8px,1.5vw,12px) clamp(14px,2.5vw,28px);
-      border-bottom:1px solid rgba(196,100,122,.08);
-      display:flex; align-items:center; gap:12px; flex-shrink:0;
-    }
-    .view-toggle button {
-      background:transparent; border:1px solid var(--border);
-      color:var(--text-muted); width:34px; height:34px; font-size:.85rem;
-      display:inline-flex; align-items:center; justify-content:center; transition:all .3s;
-    }
-    .view-toggle button.active { border-color:var(--rose); color:var(--rose); background:rgba(196,100,122,.08); }
-
-    /* Gallery grid — responsive */
-    .modal-gallery {
-      display:grid;
-      grid-template-columns:repeat(auto-fill, minmax(clamp(140px,18vw,200px), 1fr));
-      gap:4px; padding:4px; overflow-y:auto; flex:1;
-    }
-    .modal-gallery.view-list {
-      grid-template-columns:repeat(auto-fill, minmax(clamp(200px,28vw,320px), 1fr));
-      gap:6px; padding:6px;
-    }
-    .gallery-item { position:relative; overflow:hidden; background:var(--surface-2); cursor:zoom-in; border-radius:1px; }
-    .gallery-item img {
-      width:100%; aspect-ratio:4/3; object-fit:cover; display:block;
-      transition:transform .5s ease, opacity .3s;
-      filter:blur(6px) brightness(.8);
-    }
-    .gallery-item img.loaded { filter:none; }
-    .gallery-item:hover img { transform:scale(1.05); opacity:.85; }
-    .gallery-item-num { position:absolute; bottom:8px; right:10px; font-size:.6rem; letter-spacing:1px; color:rgba(245,237,232,.5); }
-    .gallery-item-hover {
-      position:absolute; inset:0; background:rgba(5,2,1,.55);
-      display:flex; align-items:center; justify-content:center;
-      opacity:0; transition:opacity .3s;
-    }
-    .gallery-item:hover .gallery-item-hover { opacity:1; }
-    .gallery-item-hover i { color:var(--rose); font-size:1.2rem; }
 
     /* ══════════════════════════════════════════
        LIGHTBOX
@@ -863,26 +762,12 @@
       .about-img-wrap { max-width:560px; }
       .about-img-badge { right:0; }
       .testimonials-track { grid-template-columns:1fr 1fr; }
+      .projects-grid { grid-template-columns:repeat(2,1fr); }
       .sessions-grid { grid-template-columns:1fr 1fr; }
       .contact-inner { grid-template-columns:1fr; gap:clamp(36px,5vw,60px); }
       .form-row { grid-template-columns:1fr 1fr; }
       .nav-links { display:none; }
       .hamburger { display:flex; }
-    }
-
-    /* ══════════════════════════════════════════
-       TABLET LANDSCAPE  ≤ 900px
-    ══════════════════════════════════════════ */
-    @media (max-width:900px) {
-      .projects-grid {
-        grid-template-columns:repeat(6,1fr);
-        grid-auto-rows:clamp(40px,5.5vw,54px);
-      }
-      .project-card:nth-child(1) { grid-column:span 6; grid-row:span 6; }
-      .project-card:nth-child(2) { grid-column:span 3; grid-row:span 5; }
-      .project-card:nth-child(3) { grid-column:span 3; grid-row:span 5; }
-      .project-card:nth-child(4) { grid-column:span 3; grid-row:span 5; }
-      .project-card:nth-child(5) { grid-column:span 3; grid-row:span 5; }
     }
 
     /* ══════════════════════════════════════════
@@ -904,25 +789,7 @@
       .about-img-badge { right:0; bottom:16px; }
 
       /* Projects */
-      .projects-grid {
-        grid-template-columns:1fr 1fr;
-        grid-auto-rows:clamp(36px,9vw,48px);
-        gap:4px;
-      }
-      .project-card:nth-child(1) { grid-column:span 2; grid-row:span 5; }
-      .project-card:nth-child(2) { grid-column:span 1; grid-row:span 4; }
-      .project-card:nth-child(3) { grid-column:span 1; grid-row:span 4; }
-      .project-card:nth-child(4) { grid-column:span 1; grid-row:span 4; }
-      .project-card:nth-child(5) { grid-column:span 1; grid-row:span 4; }
-      /* Always-visible overlay on touch */
-      .project-overlay {
-        opacity:1;
-        background:linear-gradient(to top, rgba(5,2,1,.88) 0%, transparent 60%);
-      }
-      .project-overlay h3 { font-size:clamp(.9rem,3.5vw,1.15rem); transform:none; }
-      .proj-meta { transform:none !important; }
-      .project-view-btn, .proj-tag { display:none; }
-      .proj-count { opacity:1; }
+      .projects-grid { grid-template-columns:1fr; }
 
       /* Testimonials */
       .testimonials-track { grid-template-columns:1fr; }
@@ -936,13 +803,6 @@
       .form-submit { flex-direction:column; align-items:stretch; }
       .btn-submit { width:100%; text-align:center; padding:16px; }
       .btn-wa-main { justify-content:center; }
-
-      /* Modal */
-      .modal-content { height:96dvh; border-radius:12px 12px 0 0; }
-      .modal-count-badge { display:none; }
-      .modal-gallery {
-        grid-template-columns:repeat(2,1fr) !important;
-      }
 
       /* Lightbox */
       .lb-stage { padding:10px clamp(44px,12vw,58px); }
@@ -963,6 +823,8 @@
       .testimonial-card { padding:clamp(20px,5vw,28px) clamp(16px,4vw,22px); }
       .projects-filter { gap:6px; }
       .filter-btn { padding:6px 12px; letter-spacing:2px; }
+      .sessions-tabs { gap:6px; }
+      .sess-tab-btn { padding:8px 14px; letter-spacing:1px; }
     }
 
     /* ══════════════════════════════════════════
@@ -997,9 +859,6 @@
 </head>
 <body>
 
-<div id="cursor-dot"></div>
-<div id="cursor-ring"></div>
-
 <button id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="رجوع لأعلى">
   <i class="fas fa-chevron-up"></i>
 </button>
@@ -1008,7 +867,9 @@
 
 <!-- NAV -->
 <nav id="navbar">
-  <a href="#" class="nav-logo">Shahad</a>
+  <a href="#" class="nav-logo">
+    <img src="logo shahed.png" alt="Shahad Ziyadah Photography">
+  </a>
   <ul class="nav-links">
     <li><a href="#about">من أنا</a></li>
     <li><a href="#projects">الأعمال</a></li>
@@ -1019,7 +880,7 @@
   <div class="nav-right">
     <div class="nav-social">
       <a href="https://www.instagram.com/shahedphotographer2025/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="https://wa.me/201097393550" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://wa.me/201055383948" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="القائمة" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -1037,7 +898,7 @@
   <div class="mobile-menu-social">
     <a href="https://www.instagram.com/shahedphotographer2025/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
     <a href="https://www.facebook.com/shahed.zyadeh" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-    <a href="https://wa.me/201097393550" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://wa.me/201055383948" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
   </div>
 </div>
 
@@ -1110,9 +971,8 @@
     <h2 class="section-title reveal delay-1">قصص حب<br><em>وثّقتُها بعدستي</em></h2>
     <div class="projects-filter reveal delay-2" role="group" aria-label="تصفية الأعمال">
       <button class="filter-btn active" data-filter="all">الكل</button>
-      <button class="filter-btn" data-filter="زفاف">أفراح</button>
-      <button class="filter-btn" data-filter="خطوبة">خطوبة</button>
-      <button class="filter-btn" data-filter="بورتريه">بورتريه</button>
+      <button class="filter-btn" data-filter="photos">صور</button>
+      <button class="filter-btn" data-filter="videos">فيديوز</button>
     </div>
     <div class="projects-grid reveal delay-3" id="projectsGrid" role="list"></div>
   </section>
@@ -1122,54 +982,9 @@
 <div id="sessions-wrap">
   <section id="sessions" aria-label="الجلسات">
     <p class="section-label reveal">خدماتي</p>
-    <h2 class="section-title reveal delay-1">اختاري<br><em>جلستك المثالية</em></h2>
-    <div class="sessions-grid">
-      <div class="session-card reveal delay-2">
-        <div class="session-icon"><i class="fas fa-ring" aria-hidden="true"></i></div>
-        <h3>تصوير الأفراح</h3>
-        <p>تغطية كاملة ليومكِ الأجمل من الاستعداد حتى آخر رقصة.</p>
-        <ul class="session-features">
-          <li>تغطية كاملة 8 - 12 ساعة</li>
-          <li>أكثر من 500 صورة محررة</li>
-          <li>مصورة ومساعدة</li>
-          <li>ألبوم إلكتروني فاخر</li>
-        </ul>
-        <div class="session-price">تواصلي للسعر</div>
-        <a class="btn-whatsapp" href="https://wa.me/201097393550?text=مرحبا شهد، أريد الاستفسار عن تصوير فرح" target="_blank" rel="noopener">
-          <i class="fab fa-whatsapp" aria-hidden="true"></i> احجزي الآن عبر واتساب
-        </a>
-      </div>
-      <div class="session-card reveal delay-3">
-        <div class="session-icon"><i class="fas fa-heart" aria-hidden="true"></i></div>
-        <h3>جلسة الخطوبة</h3>
-        <p>ثنائيٌّ، وعدسة، ومكان جميل — ذكريات تدوم إلى الأبد.</p>
-        <ul class="session-features">
-          <li>جلسة مدتها 2 ساعة</li>
-          <li>80 - 120 صورة محررة</li>
-          <li>موقع من اختياركِ</li>
-          <li>تسليم خلال 10 أيام</li>
-        </ul>
-        <div class="session-price">تواصلي للسعر</div>
-        <a class="btn-whatsapp" href="https://wa.me/201097393550?text=مرحبا شهد، أريد الاستفسار عن جلسة خطوبة" target="_blank" rel="noopener">
-          <i class="fab fa-whatsapp" aria-hidden="true"></i> احجزي الآن عبر واتساب
-        </a>
-      </div>
-      <div class="session-card reveal delay-4">
-        <div class="session-icon"><i class="fas fa-camera" aria-hidden="true"></i></div>
-        <h3>بورتريه وجلسات</h3>
-        <p>جلسة شخصية تُبرز طبيعتكِ وتحكي قصتكِ بأسلوب فني راقٍ.</p>
-        <ul class="session-features">
-          <li>جلسة مدتها ساعة</li>
-          <li>40 - 60 صورة محررة</li>
-          <li>لوك واحد أو متعدد</li>
-          <li>تسليم خلال 7 أيام</li>
-        </ul>
-        <div class="session-price">تواصلي للسعر</div>
-        <a class="btn-whatsapp" href="https://wa.me/201097393550?text=مرحبا شهد، أريد الاستفسار عن جلسة بورتريه" target="_blank" rel="noopener">
-          <i class="fab fa-whatsapp" aria-hidden="true"></i> احجزي الآن عبر واتساب
-        </a>
-      </div>
-    </div>
+    <h2 class="section-title reveal delay-1">اختاري<br><em>باكدج جلستك</em></h2>
+    <div class="sessions-tabs reveal delay-2" id="sessionsTabs" role="tablist" aria-label="نوع الجلسة"></div>
+    <div class="sessions-grid reveal delay-3" id="sessionsGrid"></div>
   </section>
 </div>
 
@@ -1241,7 +1056,7 @@
             <div class="contact-item-icon"><i class="fab fa-whatsapp" aria-hidden="true"></i></div>
             <div class="contact-item-text">
               <span>واتساب</span>
-              <a href="https://wa.me/201097393550" target="_blank" rel="noopener">+20 109 739 3550</a>
+              <a href="https://wa.me/201055383948" target="_blank" rel="noopener">+20 105 538 3948</a>
             </div>
           </div>
           <div class="contact-item">
@@ -1278,10 +1093,9 @@
             <label for="f-session">نوع الجلسة</label>
             <select id="f-session" required>
               <option value="">اختاري نوع الجلسة...</option>
-              <option value="تصوير فرح">💍 تصوير فرح</option>
-              <option value="جلسة خطوبة">❤️ جلسة خطوبة</option>
-              <option value="بورتريه شخصي">📸 بورتريه شخصي</option>
-              <option value="جلسة عائلية">👨‍👩‍👧 جلسة عائلية</option>
+              <option value="فرح / خطوبة">💍 فرح / خطوبة</option>
+              <option value="عيد ميلاد / سبوع">🎂 عيد ميلاد / سبوع</option>
+              <option value="تخرج">🎓 تخرج</option>
               <option value="أخرى">✨ أخرى</option>
             </select>
             <span class="field-error">من فضلك اختاري نوع الجلسة</span>
@@ -1302,7 +1116,7 @@
           </div>
           <div class="form-submit">
             <button type="submit" class="btn-submit"><span>إرسال الطلب</span></button>
-            <a href="https://wa.me/201097393550" target="_blank" rel="noopener" class="btn-wa-main">
+            <a href="https://wa.me/201055383948" target="_blank" rel="noopener" class="btn-wa-main">
               <i class="fab fa-whatsapp" aria-hidden="true"></i> أو تواصلي مباشرة
             </a>
           </div>
@@ -1318,37 +1132,12 @@
   <div class="footer-social">
     <a href="https://www.instagram.com/shahedphotographer2025/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
     <a href="https://www.facebook.com/shahed.zyadeh" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
-    <a href="https://wa.me/201097393550" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+    <a href="https://wa.me/201055383948" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
   </div>
   <p class="footer-copy">© 2026 Shahad Ziyadah Photography • All Rights Reserved</p>
   <p class="footer-copy" style="margin-top:6px;opacity:.4;">Capturing love, one frame at a time</p>
+  <p class="footer-copy" style="margin-top:6px;">تم عمله وتطويره بواسطة د / عمر عرفة وجميع الحقوق محفوظة</p>
 </footer>
-
-<!-- MODAL -->
-<div class="modal" id="projectModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="modal-content">
-    <div class="modal-header">
-      <div class="modal-header-left">
-        <img class="modal-cover-thumb" id="modalThumb" src="" alt="" loading="lazy">
-        <div class="modal-title-block">
-          <h2 id="modalTitle"></h2>
-          <div class="modal-meta" id="modalMeta"></div>
-        </div>
-      </div>
-      <div class="modal-header-right">
-        <div class="modal-count-badge" id="modalCountBadge"></div>
-        <button class="modal-close" id="modalClose" aria-label="إغلاق"><i class="fas fa-times" aria-hidden="true"></i></button>
-      </div>
-    </div>
-    <div class="modal-toolbar">
-      <div class="view-toggle" role="group" aria-label="طريقة العرض">
-        <button class="active" id="viewGrid" title="شبكة" aria-pressed="true"><i class="fas fa-th" aria-hidden="true"></i></button>
-        <button id="viewList" title="قائمة" aria-pressed="false"><i class="fas fa-th-large" aria-hidden="true"></i></button>
-      </div>
-    </div>
-    <div class="modal-gallery" id="modalGallery" role="list"></div>
-  </div>
-</div>
 
 <!-- LIGHTBOX -->
 <div id="lightbox" role="dialog" aria-modal="true" aria-label="عارض الصور">
@@ -1368,33 +1157,6 @@
 </div>
 
 <script>
-/* ══════════════════════════════════════════
-   Custom Cursor (desktop only)
-══════════════════════════════════════════ */
-if (window.matchMedia('(hover:hover)').matches && window.innerWidth > 768) {
-  const dot  = document.getElementById('cursor-dot');
-  const ring = document.getElementById('cursor-ring');
-  let mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
-  });
-  function animRing() {
-    rx += (mx-rx)*.12; ry += (my-ry)*.12;
-    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-    requestAnimationFrame(animRing);
-  }
-  animRing();
-  document.querySelectorAll('a,button,[onclick],.filter-btn,.session-card').forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-  });
-  document.querySelectorAll('.project-card,.gallery-item,.about-img-wrap').forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-img'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-img'));
-  });
-}
-
 /* ══════════════════════════════════════════
    Nav scroll + back-to-top
 ══════════════════════════════════════════ */
@@ -1436,39 +1198,99 @@ function toggleMenu() {
 })();
 
 /* ══════════════════════════════════════════
-   Projects Data
+   Projects Data — ألبومات شهد الحقيقية
 ══════════════════════════════════════════ */
 const projects = [
-  { id:1, title:"ياسمين & عمر",  location:"الغردقة",    date:"مارس ٢٠٢٥",    tag:"زفاف",    count:48, cover:"https://picsum.photos/id/1015/1200/800" },
-  { id:2, title:"ليلى & كريم",   location:"القاهرة",     date:"ديسمبر ٢٠٢٤",  tag:"خطوبة",   count:32, cover:"https://picsum.photos/id/1039/800/600"  },
-  { id:3, title:"نور & أحمد",    location:"شرم الشيخ",  date:"أكتوبر ٢٠٢٤",  tag:"زفاف",    count:56, cover:"https://picsum.photos/id/201/800/600"   },
-  { id:4, title:"سارة & محمد",   location:"الإسكندرية", date:"يونيو ٢٠٢٥",   tag:"بورتريه", count:24, cover:"https://picsum.photos/id/350/800/600"   },
-  { id:5, title:"هنا & طارق",    location:"الجيزة",      date:"فبراير ٢٠٢٥",  tag:"خطوبة",  count:38, cover:"https://picsum.photos/id/401/800/600"   },
+  {
+    id: 1,
+    title: "ألبوم الصور",
+    location: "طنطا",
+    date: "2025-06-01",
+    dateLabel: "٢٠٢٥",
+    tag: "بورتريه",
+    type: "photos",
+    cover: "photos/LOLO.jpg",
+    images: [
+      "photos/photo_1.jpg",
+      "photos/photo_2.jpg",
+      "photos/photo_3.jpg",
+      "photos/photo_4.jpg",
+      "photos/photo_5.jpg",
+      "photos/photo_6.jpg",
+      "photos/photo_7.jpg",
+      "photos/photo_8.jpg",
+      "photos/photo_9.jpg",
+      "photos/photo_10.jpg",
+      "photos/photo_11.jpg",
+      "photos/photo_12.jpg",
+      "photos/photo_13.jpg",
+      "photos/photo_14.jpg",
+      "photos/photo_15.jpg",
+      "photos/photo_16.jpg",
+      "photos/photo_17.jpg",
+      "photos/photo_18.jpg",
+      "photos/photo_19.jpg",
+      "photos/photo_20.jpg",
+    ]
+  },
+  {
+    id: 2,
+    title: "ألبوم الفيديوز",
+    location: "طنطا",
+    date: "2025-05-01",
+    dateLabel: "٢٠٢٥",
+    tag: "زفاف",
+    type: "videos",
+    cover: "photos/lele.jpg",  // ← غيّري لصورة غلاف الفيديوز لو عندك
+    images: [
+      "Videos/IMG_1.MOV",
+      "Videos/IMG_2.MOV",
+      "Videos/IMG_3.MOV",
+      "Videos/IMG_4.MOV",
+      "Videos/IMG_5.MOV",
+      "Videos/IMG_6.MOV",
+      "Videos/IMG_7.MOV",
+      "Videos/IMG_8.MOV",
+      "Videos/IMG_9.MOV",
+      "Videos/IMG_10.MOV",
+    ]
+  },
 ];
+projects.sort((a,b) => new Date(b.date) - new Date(a.date));
+
 let activeFilter = 'all';
+
+function isVideo(src) {
+  return /\.(mp4|webm|mov|avi)$/i.test(src);
+}
 
 function renderProjects() {
   const grid = document.getElementById('projectsGrid');
   grid.innerHTML = '';
-  const filtered = activeFilter === 'all' ? projects : projects.filter(p => p.tag === activeFilter);
+  const filtered = activeFilter === 'all' ? projects : projects.filter(p => p.type === activeFilter);
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="projects-empty">لا توجد أعمال في هذا التصنيف حالياً</div>';
+    return;
+  }
   filtered.forEach(p => {
     const card = document.createElement('div');
     card.className = 'project-card';
     card.setAttribute('role', 'listitem');
+    const icon = p.type === 'videos' ? 'fa-film' : 'fa-images';
+    const countLabel = p.type === 'videos' ? 'فيديو' : 'صورة';
     card.innerHTML = `
-      <img src="${p.cover}" alt="${p.title}" loading="lazy" decoding="async">
-      <div class="proj-count" aria-hidden="true"><i class="fas fa-images"></i> ${p.count} صورة</div>
-      <div class="project-overlay">
+      <div class="project-thumb">
+        <img src="${p.cover}" alt="${p.title}" loading="lazy" decoding="async">
         <span class="proj-tag">${p.tag}</span>
+        <div class="proj-count" aria-hidden="true"><i class="fas ${icon}"></i> ${p.images.length} ${countLabel}</div>
+      </div>
+      <div class="project-body">
         <h3>${p.title}</h3>
-        <p class="proj-meta">${p.location} · ${p.date}</p>
-        <div class="project-view-btn"><i class="fas fa-expand-alt" aria-hidden="true"></i> فتح الألبوم</div>
+        <div class="proj-meta"><i class="fas fa-map-marker-alt"></i> ${p.location}</div>
+        <div class="proj-meta"><i class="fas fa-calendar"></i> ${p.dateLabel}</div>
+        <div class="project-view-btn"><i class="fas fa-expand-alt" aria-hidden="true"></i> عرض الألبوم</div>
       </div>`;
-    card.addEventListener('click', () => openModal(p));
-    if (window.matchMedia('(hover:hover)').matches) {
-      card.addEventListener('mouseenter', () => document.body.classList.add('cursor-img'));
-      card.addEventListener('mouseleave', () => document.body.classList.remove('cursor-img'));
-    }
+    card.addEventListener('click', () => openLightboxForProject(p));
     grid.appendChild(card);
   });
 }
@@ -1483,76 +1305,26 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 });
 
 /* ══════════════════════════════════════════
-   Modal
+   Lightbox — يدعم صور وفيديوز
 ══════════════════════════════════════════ */
 let lbImages=[], lbThumbs=[], lbIndex=0, currentProject=null;
 
-function openModal(p) {
+function openLightboxForProject(p) {
   currentProject = p;
-  document.getElementById('modalTitle').textContent = p.title;
-  document.getElementById('modalMeta').textContent = `${p.location} · ${p.date} · ${p.tag}`;
-  document.getElementById('modalThumb').src = p.cover;
-  document.getElementById('modalThumb').alt = p.title;
-  document.getElementById('modalCountBadge').textContent = `${p.count} صورة`;
-  const gallery = document.getElementById('modalGallery');
-  gallery.innerHTML = ''; lbImages = []; lbThumbs = [];
-  for (let i = 1; i <= p.count; i++) {
-    const imgId = 100 + ((p.id*7 + i) % 80) * 3;
-    const fullSrc  = `https://picsum.photos/id/${imgId}/1400/933`;
-    const thumbSrc = `https://picsum.photos/id/${imgId}/400/300`;
-    lbImages.push(fullSrc); lbThumbs.push(thumbSrc);
-    const item = document.createElement('div');
-    item.className = 'gallery-item';
-    item.setAttribute('role','listitem');
-    const idx = i - 1;
-    item.innerHTML = `
-      <img src="${thumbSrc}" alt="صورة ${i} من ألبوم ${p.title}" loading="lazy" decoding="async">
-      <span class="gallery-item-num" aria-hidden="true">${i}</span>
-      <div class="gallery-item-hover" aria-hidden="true"><i class="fas fa-expand-alt"></i></div>`;
-    const img = item.querySelector('img');
-    img.addEventListener('load', () => img.classList.add('loaded'));
-    if (img.complete) img.classList.add('loaded');
-    item.addEventListener('click', () => openLightbox(idx));
-    if (window.matchMedia('(hover:hover)').matches) {
-      item.addEventListener('mouseenter', () => document.body.classList.add('cursor-img'));
-      item.addEventListener('mouseleave', () => document.body.classList.remove('cursor-img'));
-    }
-    gallery.appendChild(item);
-  }
-  document.getElementById('projectModal').classList.add('open');
+  lbImages = p.images;
+  lbThumbs = p.type === 'photos' ? p.images : p.images.map(() => p.cover);
+  lbIndex = 0;
+  buildStrip(); updateLb();
+  document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
-function closeModal() {
-  document.getElementById('projectModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-document.getElementById('modalClose').addEventListener('click', closeModal);
-document.getElementById('projectModal').addEventListener('click', e => {
-  if (e.target === document.getElementById('projectModal')) closeModal();
-});
-
-document.getElementById('viewGrid').addEventListener('click', () => {
-  document.getElementById('modalGallery').classList.remove('view-list');
-  document.getElementById('viewGrid').classList.add('active'); document.getElementById('viewGrid').setAttribute('aria-pressed','true');
-  document.getElementById('viewList').classList.remove('active'); document.getElementById('viewList').setAttribute('aria-pressed','false');
-});
-document.getElementById('viewList').addEventListener('click', () => {
-  document.getElementById('modalGallery').classList.add('view-list');
-  document.getElementById('viewList').classList.add('active'); document.getElementById('viewList').setAttribute('aria-pressed','true');
-  document.getElementById('viewGrid').classList.remove('active'); document.getElementById('viewGrid').setAttribute('aria-pressed','false');
-});
-
-/* ══════════════════════════════════════════
-   Lightbox
-══════════════════════════════════════════ */
 function buildStrip() {
   const strip = document.getElementById('lbStrip');
   strip.innerHTML = '';
   lbThumbs.forEach((src, i) => {
     const t = document.createElement('img');
-    t.src = src; t.alt = `صورة ${i+1}`; t.setAttribute('role','listitem');
+    t.src = src; t.alt = `عنصر ${i+1}`; t.setAttribute('role','listitem');
     t.className = 'lb-thumb' + (i === lbIndex ? ' active' : '');
     t.addEventListener('click', () => goToLb(i));
     strip.appendChild(t);
@@ -1564,31 +1336,53 @@ function syncStrip() {
   if (active) active.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
 }
 function updateLb() {
-  document.getElementById('lbImg').src = lbImages[lbIndex];
+  const src = lbImages[lbIndex];
+  const stage = document.querySelector('.lb-stage');
+
+  // امسح أي فيديو قديم
+  const oldVideo = document.getElementById('lbVideo');
+  if (oldVideo) oldVideo.remove();
+  const lbImg = document.getElementById('lbImg');
+
+  if (isVideo(src)) {
+    lbImg.style.display = 'none';
+    const vid = document.createElement('video');
+    vid.id = 'lbVideo';
+    vid.src = src;
+    vid.controls = true;
+    vid.autoplay = true;
+    vid.style.cssText = 'max-width:100%;max-height:100%;border-radius:2px;animation:lbIn .28s ease;';
+    stage.insertBefore(vid, document.getElementById('lb-next'));
+  } else {
+    lbImg.style.display = '';
+    lbImg.src = src;
+  }
+
   document.getElementById('lb-counter').textContent = `${lbIndex+1} / ${lbImages.length}`;
   document.getElementById('lbTitle').textContent = currentProject ? currentProject.title : '';
   syncStrip();
 }
 function goToLb(idx) {
   lbIndex = idx;
+  // وقّفي الفيديو القديم لو موجود
+  const oldVideo = document.getElementById('lbVideo');
+  if (oldVideo) { oldVideo.pause(); oldVideo.remove(); }
   document.getElementById('lbImg').src = '';
   setTimeout(updateLb, 10);
 }
-function openLightbox(idx) {
-  lbIndex = idx; buildStrip(); updateLb();
-  document.getElementById('lightbox').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
 function closeLightbox() {
+  // وقّفي الفيديو عند الإغلاق
+  const vid = document.getElementById('lbVideo');
+  if (vid) { vid.pause(); vid.remove(); }
+  document.getElementById('lbImg').style.display = '';
   document.getElementById('lightbox').classList.remove('open');
-  document.body.style.overflow = document.getElementById('projectModal').classList.contains('open') ? 'hidden' : '';
+  document.body.style.overflow = '';
 }
 
 document.getElementById('lbClose').addEventListener('click', closeLightbox);
 document.getElementById('lb-prev').addEventListener('click', () => goToLb((lbIndex+1) % lbImages.length));
 document.getElementById('lb-next').addEventListener('click', () => goToLb((lbIndex-1+lbImages.length) % lbImages.length));
 
-/* Touch swipe for lightbox */
 let tsX = 0;
 document.getElementById('lightbox').addEventListener('touchstart', e => { tsX = e.touches[0].clientX; }, { passive:true });
 document.getElementById('lightbox').addEventListener('touchend', e => {
@@ -1603,8 +1397,6 @@ document.addEventListener('keydown', e => {
     if (e.key==='ArrowLeft')  goToLb((lbIndex-1+lbImages.length)%lbImages.length);
     if (e.key==='ArrowRight') goToLb((lbIndex+1)%lbImages.length);
     if (e.key==='Escape')     closeLightbox();
-  } else if (document.getElementById('projectModal').classList.contains('open')) {
-    if (e.key==='Escape') closeModal();
   }
 });
 
@@ -1614,7 +1406,7 @@ document.addEventListener('keydown', e => {
 function animateCounters() {
   document.querySelectorAll('.stat-num[data-target]').forEach(el => {
     const target = +el.dataset.target;
-    const suffix = target >= 100 ? '+' : target === 12 ? '' : '+';
+    const suffix = '+';
     let current = 0;
     const step = Math.ceil(target / 60);
     const timer = setInterval(() => {
@@ -1629,6 +1421,83 @@ const statsObserver = new IntersectionObserver(entries => {
 }, { threshold:.4 });
 const statsEl = document.querySelector('.about-stats');
 if (statsEl) statsObserver.observe(statsEl);
+
+/* ══════════════════════════════════════════
+   Sessions / Pricing Data
+══════════════════════════════════════════ */
+const sessionCategories = [
+  {
+    id:'wedding', label:'فرح / خطوبة', icon:'fa-ring',
+    packages: [
+      { name:'ريل واحد', sub:'تغطية فيديو سريعة', price:'350', features:['ريل واحد احترافي','مونتاج وتصميم','تسليم سريع'] },
+      { name:'باكدج ريلين', sub:'مع فريست', price:'800', features:['2 ريل','فريست (Freeze frame)','مونتاج كامل'] },
+      { name:'باكدج 3 ريلز', sub:'مع فريست', price:'1150', features:['3 ريلز','فريست','تغطية أوسع للحظات'], featured:true, badge:'الأكثر طلباً' },
+      { name:'باكدج 4 ريلز', sub:'مع فريست', price:'1500', features:['4 ريلز','فريست','تغطية شاملة لليوم'] },
+      { name:'باكدج 5 ريلز', sub:'مع فريست', price:'1850', features:['5 ريلز','فريست','أقصى تغطية فيديو'] },
+      { name:'ريلين + صور مفتوح', sub:'فيديو وتصوير فوتوغرافي', price:'1800', features:['2 ريل','عدد صور غير محدود','تغطية متكاملة فيديو وصور'] },
+    ]
+  },
+  {
+    id:'birthday', label:'عيد ميلاد / سبوع', icon:'fa-cake-candles',
+    packages: [
+      { name:'ريل واحد', sub:'تغطية فيديو سريعة', price:'200', features:['ريل واحد احترافي','مونتاج وتصميم','تسليم سريع'] },
+      { name:'باكدج ريلين', sub:null, price:'350', features:['2 ريل','مونتاج كامل','تسليم خلال أيام'], featured:true, badge:'الأكثر طلباً' },
+      { name:'باكدج 3 ريلز', sub:null, price:'450', features:['3 ريلز','تغطية أوسع للحظات الحفل'] },
+      { name:'ريلين + صور مفتوح', sub:'فيديو وتصوير فوتوغرافي', price:'1000', features:['2 ريل','عدد صور غير محدود','تغطية متكاملة فيديو وصور'] },
+    ]
+  },
+  {
+    id:'graduation', label:'تخرج وجلسات', icon:'fa-graduation-cap',
+    packages: [
+      { name:'ريل واحد', sub:'تغطية فيديو سريعة', price:'300', features:['ريل واحد احترافي','مونتاج وتصميم','تسليم سريع'] },
+      { name:'باكدج ريلين', sub:null, price:'450', features:['2 ريل','مونتاج كامل','تسليم خلال أيام'], featured:true, badge:'الأكثر طلباً' },
+      { name:'باكدج 3 ريلز', sub:null, price:'550', features:['3 ريلز','تغطية أوسع للحظات'] },
+      { name:'ريلين + صور مفتوح', sub:'فيديو وتصوير فوتوغرافي', price:'1200', features:['2 ريل','عدد صور غير محدود','تغطية متكاملة فيديو وصور'] },
+    ]
+  },
+];
+let activeSessionCat = 'wedding';
+
+function renderSessionsTabs() {
+  const tabs = document.getElementById('sessionsTabs');
+  tabs.innerHTML = '';
+  sessionCategories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'sess-tab-btn' + (cat.id === activeSessionCat ? ' active' : '');
+    btn.setAttribute('role','tab');
+    btn.setAttribute('aria-selected', cat.id === activeSessionCat ? 'true' : 'false');
+    btn.innerHTML = `<i class="fas ${cat.icon}" aria-hidden="true"></i> ${cat.label}`;
+    btn.addEventListener('click', () => {
+      activeSessionCat = cat.id;
+      renderSessionsTabs();
+      renderSessionsGrid();
+    });
+    tabs.appendChild(btn);
+  });
+}
+
+function renderSessionsGrid() {
+  const grid = document.getElementById('sessionsGrid');
+  grid.innerHTML = '';
+  const cat = sessionCategories.find(c => c.id === activeSessionCat);
+  cat.packages.forEach(pkg => {
+    const card = document.createElement('div');
+    card.className = 'session-card' + (pkg.featured ? ' featured' : '');
+    const waMsg = encodeURIComponent(`مرحبا شهد، أريد الاستفسار عن: ${cat.label} - ${pkg.name} (${pkg.price} ج.م)`);
+    card.innerHTML = `
+      ${pkg.badge ? `<span class="session-badge">${pkg.badge}</span>` : ''}
+      <h3>${pkg.name}</h3>
+      ${pkg.sub ? `<div class="session-sub">${pkg.sub}</div>` : '<div class="session-sub">&nbsp;</div>'}
+      <div class="session-price">${pkg.price} <span>ج.م</span></div>
+      <ul class="session-features">
+        ${pkg.features.map(f => `<li>${f}</li>`).join('')}
+      </ul>
+      <a class="btn-whatsapp" href="https://wa.me/201055383948?text=${waMsg}" target="_blank" rel="noopener">
+        <i class="fab fa-whatsapp" aria-hidden="true"></i> احجزي الآن عبر واتساب
+      </a>`;
+    grid.appendChild(card);
+  });
+}
 
 /* ══════════════════════════════════════════
    Form Validation + WhatsApp
@@ -1655,7 +1524,7 @@ function sendToWhatsApp(e) {
   const city    = document.getElementById('f-city').value.trim();
   const msg     = document.getElementById('f-msg').value.trim();
   const text = `مرحبا شهد! 👋\n\nالاسم: ${name}\nالهاتف: ${phone}\nنوع الجلسة: ${session||'غير محدد'}\nالتاريخ: ${date||'غير محدد'}\nالمدينة: ${city||'غير محدد'}\n\nالرسالة:\n${msg||'—'}`;
-  window.open(`https://wa.me/201097393550?text=${encodeURIComponent(text)}`, '_blank');
+  window.open(`https://wa.me/201055383948?text=${encodeURIComponent(text)}`, '_blank');
   showToast('✓ جاري التحويل لواتساب...');
 }
 ['f-name','f-session'].forEach(id => {
@@ -1679,6 +1548,8 @@ function showToast(msg, duration=3000) {
    Init
 ══════════════════════════════════════════ */
 renderProjects();
+renderSessionsTabs();
+renderSessionsGrid();
 </script>
 </body>
 </html>
